@@ -9,6 +9,9 @@ speechrecognition = "*"
 pydub = "*"
 flask-talisman = "*"
 flask-limiter = "*"
+openai = "*"
+pydantic = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
