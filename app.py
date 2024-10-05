@@ -1,15 +1,28 @@
 from flask import Flask, request, jsonify, render_template
+from flask_talisman import Talisman
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 import speech_recognition as sr
 from pydub import AudioSegment
 import io
 
 app = Flask(__name__)
 
+talisman = Talisman(app)
+
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["500 per day", "100 per hour"]
+)
+
 @app.route('/')
+@limiter.limit("10 per minute")
 def index():
   return render_template('index.html')
 
 @app.route('/transcribe', methods=['POST'])
+@limiter.limit("10 per minute")
 def transcribe():
   if 'audio' not in request.files:
     return jsonify({'error': 'No audio file provided'}), 400
