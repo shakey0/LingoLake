@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
   let mediaRecorder;
   let audioChunks = [];
+  let stream;
   const startRec = document.getElementById('startRecording');
   const scrapRec = document.getElementById('scrapRecording');
   const finishRec = document.getElementById('finishRecording');
@@ -8,7 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
   startRec.onclick = () => {
     navigator.mediaDevices.getUserMedia({ audio: true })
-      .then(stream => {
+      .then(s => {
+        stream = s;
         mediaRecorder = new MediaRecorder(stream);
         mediaRecorder.start();
 
@@ -22,6 +24,10 @@ document.addEventListener('DOMContentLoaded', function() {
       });
   };
 
+  function stopMicrophone() {
+    stream.getTracks().forEach(track => track.stop()); // Stop all tracks
+  }
+
   scrapRec.onclick = () => {
     mediaRecorder.stop();
     scrapRec.disabled = true;
@@ -29,6 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     mediaRecorder.addEventListener("stop", () => {
       audioChunks = [];
+      stopMicrophone();
       startRec.disabled = false;
     });
   }
@@ -62,6 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
         startRec.disabled = false;
       });
 
+      stopMicrophone();
       audioChunks = [];
     });
   };
