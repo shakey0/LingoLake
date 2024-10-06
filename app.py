@@ -4,9 +4,13 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 import speech_recognition as sr
 from pydub import AudioSegment
+from dotenv import load_dotenv
+from lib.process_answer import process_answer
 import io
 
 app = Flask(__name__)
+
+load_dotenv()
 
 talisman = Talisman(app)
 
@@ -42,7 +46,10 @@ def transcribe():
     audio_data = recognizer.record(source)
     try:
       text = recognizer.recognize_google(audio_data)
-      return jsonify({'transcription': text})
+      feedback = process_answer.process("What do you usually do at the weekend?", text, "Chinese", "A2")
+      print("FEEDBACK")
+      print(feedback)
+      return jsonify({'feedback': feedback['response']})
     except sr.UnknownValueError:
       return jsonify({'error': 'Speech recognition could not understand the audio'}), 400
     except sr.RequestError:

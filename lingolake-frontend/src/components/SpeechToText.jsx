@@ -51,8 +51,14 @@ const SpeechToText = () => {
         })
         .then(response => response.json())
         .then(data => {
-          if (data.transcription) {
-            setResult(data.transcription);
+          if (data.feedback) {
+            console.log('Feedback:', data.feedback);
+            const originalAnswer = `Original Answer: ${data.feedback.original_answer_with_punctuation}`;
+            const correctedAnswer = `Corrected Answer: ${data.feedback.corrected_answer_with_punctuation}`;
+            const explanations = data.feedback.explanations.map((explanation, index) => {
+              return `Explanation ${index + 1}:<br>${explanation.mistake}<br>${explanation.correction}<br>${explanation.explanation_in_english}<br>${explanation.explanation_in_user_native_language}`;
+            });
+            setResult([originalAnswer, correctedAnswer, ...explanations].join('<br><br>'));
           } else {
             setResult('Error: ' + data.error);
           }
@@ -71,6 +77,8 @@ const SpeechToText = () => {
   return (
     <div>
       <h1>Speech to Text</h1>
+      <h3>What do you usually do at the weekend?</h3>
+      <p>Click the button below to start recording your answer.</p>
       <button onClick={startRecording} disabled={isRecording}>Record answer</button>
       <button onClick={scrapRecording} disabled={!isRecording}>Scrap</button>
       <button onClick={finishRecording} disabled={!isRecording}>Finish</button>
