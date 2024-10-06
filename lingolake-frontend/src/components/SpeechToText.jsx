@@ -53,12 +53,17 @@ const SpeechToText = () => {
         .then(data => {
           if (data.feedback) {
             console.log('Feedback:', data.feedback);
-            const originalAnswer = `Original Answer: ${data.feedback.original_answer_with_punctuation}`;
-            const correctedAnswer = `Corrected Answer: ${data.feedback.corrected_answer_with_punctuation}`;
+            const correctedAnswer = `<strong>Corrected Answer:</strong> ${data.feedback.corrected_answer}`;
             const explanations = data.feedback.explanations.map((explanation, index) => {
-              return `Explanation ${index + 1}:<br>${explanation.mistake}<br>${explanation.correction}<br>${explanation.explanation_in_english}<br>${explanation.explanation_in_user_native_language}`;
+              return `
+                <strong>Explanation ${index + 1}:</strong><br>
+                Mistake: ${explanation.mistake}<br>
+                Correction: ${explanation.correction}<br>
+                Explanation (English): ${explanation.explanation_in_english}<br>
+                Explanation (Native Language): ${explanation.explanation_in_user_native_language}
+              `;
             });
-            setResult([originalAnswer, correctedAnswer, ...explanations].join('<br><br>'));
+            setResult([correctedAnswer, ...explanations].join('<br><br>'));
           } else {
             setResult('Error: ' + data.error);
           }
@@ -82,7 +87,7 @@ const SpeechToText = () => {
       <button onClick={startRecording} disabled={isRecording}>Record answer</button>
       <button onClick={scrapRecording} disabled={!isRecording}>Scrap</button>
       <button onClick={finishRecording} disabled={!isRecording}>Finish</button>
-      <p>{result}</p>
+      <div dangerouslySetInnerHTML={{ __html: result }} />
     </div>
   );
 };
