@@ -54,6 +54,15 @@ def transcribe():
       return jsonify({'error': 'Speech recognition could not understand the audio'}), 400
     except sr.RequestError:
       return jsonify({'error': 'Could not request results from speech recognition service'}), 500
+    
+@app.route('/evaluate', methods=['POST'])
+@limiter.limit("10 per minute")
+def evaluate():
+  data = request.get_json()
+  answer = data.get('answer')
+  feedback = process_answer.process("What do you usually do at the weekend?", answer, "Chinese", "A2")
+  print(feedback)
+  return jsonify({'feedback': feedback['response']})
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=5001, debug=True)

@@ -12,8 +12,16 @@ class ProcessAnswer:
       ANSWER: {user_answer}
       This is the question the user was given and the answer the user provided.
       The answer was provided via speech-to-text and may contain errors because of the transcription process. It does not contain any punctuation.
-      corrected_answer: Your task is to add the necessary punctuation to the user's answer and correct the English. Do not change the answer itself. {self.correction_instructions}
-      explanations: Your task is to explain the mistakes in the user's answer and correct the user's English. Only correct a maximum of 3 mistakes in the user's answer. Your explanations in English should be clear and not use any language beyond {user_level} level to explain the concepts or the user might not understand. Your explanations in {native_language} should be clear and can use language at any level and must quote the mistake in English and the correction in English within the {native_language}. {native_language} is the user's native language.
+      corrected_answer:
+      Your task is to add the necessary punctuation to the user's answer and correct the English. Do not change the answer itself. {self.correction_instructions}
+      explanations:
+      First of all, look for any mistakes in the user's answer. Only look for mistakes in the grammar and vocabulary, not in the punctuation.
+      If you can't find any mistakes in the grammar or vocabulary, then just return an empty array for explanations.
+      If you find any mistakes in the grammar and/or vocabulary in the user's answer, then your task is to explain them and correct the user's English.
+      Explain a maximum of 3 mistakes in the user's answer. If there are more than 3 mistakes, then only explain the biggest 3 mistakes.
+      Your explanations in English should be clear and not use any words beyond the {user_level} level of English to explain the concepts.
+      Your explanations in {native_language} should be clear and can use language at any level and must quote the mistake in English and
+      the correction in English within the {native_language}. {native_language} is the user's native language.
     """
 
     api_key = os.getenv("OPENAI_API_KEY")
