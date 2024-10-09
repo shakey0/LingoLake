@@ -15,9 +15,9 @@ load_dotenv()
 talisman = Talisman(app)
 
 limiter = Limiter(
-    get_remote_address,
-    app=app,
-    default_limits=["500 per day", "100 per hour"]
+  get_remote_address,
+  app=app,
+  default_limits=["500 per day", "100 per hour"]
 )
 
 @app.route('/')
@@ -25,9 +25,9 @@ limiter = Limiter(
 def index():
   return render_template('index.html')
 
-@app.route('/transcribe', methods=['POST'])
+@app.route('/submit_answer', methods=['POST'])
 @limiter.limit("10 per minute")
-def transcribe():
+def submit_answer():
   if 'audio' not in request.files:
     return jsonify({'error': 'No audio file provided'}), 400
 
@@ -55,7 +55,7 @@ def transcribe():
     except sr.RequestError:
       return jsonify({'error': 'Could not request results from speech recognition service'}), 500
     
-@app.route('/evaluate', methods=['POST'])
+@app.route('/temp_evaluate', methods=['POST'])
 @limiter.limit("10 per minute")
 def evaluate():
   data = request.get_json()

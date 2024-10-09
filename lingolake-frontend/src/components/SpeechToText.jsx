@@ -69,7 +69,7 @@ const SpeechToText = () => {
         const formData = new FormData();
         formData.append("audio", audioBlob, "recording.webm");
 
-        fetch('/transcribe', {
+        fetch('/submit_answer', {
           method: 'POST',
           body: formData
         })
@@ -79,7 +79,7 @@ const SpeechToText = () => {
         })
         .catch(error => {
           console.log('Error:', error);
-          setResult('An error occurred during transcription.');
+          setResult('An error occurred while processing your answer.'); // UPDATE THIS LATER TO SHOW SPECIFIC ERROR
           setIsEvaluatingAnswer(false);
         });
 
@@ -92,7 +92,7 @@ const SpeechToText = () => {
   // TEMP: For testing purposes
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    fetch('/evaluate', {
+    fetch('/temp_evaluate', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

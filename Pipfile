@@ -12,6 +12,7 @@ flask-limiter = "*"
 openai = "*"
 pydantic = "*"
 python-dotenv = "*"
+anthropic = "*"
 
 [dev-packages]
 
